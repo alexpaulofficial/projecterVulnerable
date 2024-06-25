@@ -107,7 +107,7 @@ Questa piattaforma è stata progettata per gestire progetti di team, fornendo fu
 
 ### 1. Server-Side Request Forgery (SSRF) nella Generazione di PDF
 
-La generazione del PDF include contenuti HTML che possono includere iframe con URL esterni o interni. Un esempio di come sfruttare questa vulnerabilità è inserire un iframe che punti a file locali come `/etc/passwd`.
+La <b>generazione del PDF</b> include contenuti HTML che possono includere iframe con URL esterni o interni. Un esempio di come sfruttare questa vulnerabilità è inserire un iframe che punti a file locali come `/etc/passwd`.
 
 **Esempio di Payload Maligno:**
 
