@@ -72,20 +72,20 @@ router.post('/:id/add-member', isAdmin, async (req, res) => {
     res.redirect(`/projects/${req.params.id}`);
   }
   else {
-    res.status(404).send('User not found');
+    res.status(404).send('Utente non trovato');
   }
 });
 
 // Carica un documento al progetto
 router.post('/:id/upload-document', isAdmin, async (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('Nessun file è stato caricato.');
+    return res.status(400).send('Nessun file è stato caricato');
   }
 
   // Validazione dell'ID del progetto
   const project = await Project.findById(req.params.id);
   if (!project) {
-    return res.status(404).send('Progetto non trovato.');
+    return res.status(404).send('Progetto non trovato');
   }
 
   const file = req.files.document;
@@ -93,7 +93,7 @@ router.post('/:id/upload-document', isAdmin, async (req, res) => {
   // Controllo del tipo di file
   const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
   if (!allowedTypes.includes(file.mimetype)) {
-    return res.status(400).send('Tipo di file non consentito.');
+    return res.status(400).send('Tipo di file non consentito');
   }
 
   // Pulizia del nome del file e generazione di un nome univoco
@@ -104,7 +104,7 @@ router.post('/:id/upload-document', isAdmin, async (req, res) => {
   // Limitazione della dimensione del file
   const maxSize = 30 * 1024 * 1024; // 30MB
   if (file.size > maxSize) {
-    return res.status(400).send('Il file supera la dimensione massima consentita.');
+    return res.status(400).send('Il file supera la dimensione massima consentita (30 MB)');
   }
 
   const uploadPath = path.join(__dirname, '../uploads/', cleanName);
@@ -123,7 +123,7 @@ router.post('/:id/generate-pdf', isAdmin, async (req, res) => {
   const project = await Project.findById(req.params.id).populate('members').populate('documents');
 
   if (!project) {
-    return res.status(404).send('Pogetto non trovato.');
+    return res.status(404).send('Pogetto non trovato');
   }
 
  const htmlTemplate = `
@@ -168,12 +168,12 @@ router.post('/:id/generate-pdf', isAdmin, async (req, res) => {
   <body>
     <div class="container">
       <h1>${project.name}</h1>
-      <p>Description: ${project.description}</p>
-      <h2>Members</h2>
+      <p>Descrizione: ${project.description}</p>
+      <h2>Membri</h2>
       <ul>
         ${project.members.map(member => `<li>${member.username}</li>`).join('')}
       </ul>
-      <h2>Documents</h2>
+      <h2>Documenti allegati</h2>
       <ul>
         ${project.documents.map(document => `<li>${document.filename}</li>`).join('')}
       </ul>
@@ -207,7 +207,7 @@ router.post('/:id/generate-pdf', isAdmin, async (req, res) => {
     res.send(pdfBuffer);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error generating PDF');
+    res.status(500).send('Errore generazione PDF');
   }
 });
 

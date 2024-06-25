@@ -26,15 +26,14 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   const user = await User.findOne({ username });
-  if (!user) {
-    return res.status(400).send('Invalid credentials');
-  }
-
+  if (user) {
   const isMatch = await bcrypt.compare('' + password, user.password);
   if (!isMatch) {
-    return res.status(400).send('Invalid credentials');
+    return res.status(400).send('Crednziali non valide');
   }
-  
+  } else {
+    return res.status(400).send('Credenziali non valide');
+  }
   const token = jwt.sign({username: user.username, role: user.role, email: user.email }, weakSecret, { expiresIn: '1h' });
   res.cookie('token', token, { httpOnly: true });
 
@@ -48,7 +47,7 @@ router.post('/register', async (req, res) => {
   try {
     const existingUser = await User.findOne({ sanitizedUsername });
     if (existingUser) {
-      return res.status(400).send('User already exists');
+      return res.status(400).send('Utenza già esistente');
     }
     // Sanificazione dei dati con XSS
     const hashedPassword = bcrypt.hashSync(password, 10);
@@ -60,8 +59,8 @@ router.post('/register', async (req, res) => {
     res.cookie('token', token, { httpOnly: true });
     res.redirect('/profile');
   } catch (err) {
-    console.error('Error registering user:', err);
-    return res.status(500).send('Error registering user:', err);
+    console.error('Errore di registrazione:', err);
+    return res.status(500).send('Errore di registrazione:', err);
   }
 });
 

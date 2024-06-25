@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
         // Call the next middleware or route handler
         next();
     } catch (error) {
-        return res.status(401).json({ message: 'Invalid token' });
+        return res.status(401).json({ message: 'Token non valido' });
     }
 }
 };
@@ -30,12 +30,12 @@ const authMiddleware = (req, res, next) => {
 authMiddleware.isAdmin = (req, res, next) => {
     authMiddleware(req, res, () => {});
     if (!req.user) {
-        return res.status(401).send('Unauthorized');
+        return res.status(401).send('Non autorizzato');
     }
     if (req.user.role === 'admin') {
         next();
     } else {
-        res.status(403).send('Forbidden');
+        res.status(403).send('Vietato');
     }
 };
 
