@@ -1,0 +1,23 @@
+<%- include('layout', { title: 'Home', user: user, body: `
+<div class="jumbotron mt-4">
+  <h1 class="display-4">Benvenuti su Projecter</h1>
+  <p class="lead">La soluzione definitiva per la gestione dei tuoi progetti. Organizza, traccia e collabora con facilità.</p>
+  <hr class="my-4">
+  <p>Scopri come Projecter può trasformare il tuo modo di lavorare.</p>
+  <a class="btn btn-primary btn-lg" href="/auth/register" role="button">Inizia Ora</a>
+</div>
+<div class="row">
+  <div class="col-lg-4">
+    <h2>Organizzazione Progetti</h2>
+    <p>Struttura i tuoi progetti in fasi, assegna compiti e stabilisci scadenze. Tutto in un unico posto.</p>
+  </div>
+  <div class="col-lg-4">
+    <h2>Collaborazione del Team</h2>
+    <p>Facilita la comunicazione tra i membri del team. Condividi documenti, feedback e aggiornamenti in tempo reale.</p>
+  </div>
+  <div class="col-lg-4">
+    <h2>Analisi e Report</h2>
+    <p>Ottieni insight preziosi sui tuoi progetti con report dettagliati. Monitora i progressi e ottimizza i processi.</p>
+  </div>
+</div>
+` }) %>

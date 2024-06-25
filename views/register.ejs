@@ -1,0 +1,202 @@
+<%- include('layout', { title: 'Register', user: user, body: `` }) %>
+<style>
+
+.input-container {
+  position: relative;
+  border-radius: 4px 4px 0 0;
+  height: 56px;
+  transition: background-color 500ms;
+}
+
+.input-container:hover {
+  background-color: #ffffff;
+}
+
+.input-container:focus-within {
+  background-color: #ffffff;
+}
+
+label {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 16px;
+  color: rgba(0, 0, 0, 0.5);
+  transform-origin: left top;
+  user-select: none;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1),color 150ms cubic-bezier(0.4, 0, 0.2, 1), top 500ms;
+}
+
+input {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  caret-color: var(--accent-color);
+  border: 1px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.42);
+  color: rgba(0, 0, 0, 0.87);
+  transition: border 500ms;
+  padding: 20px 16px 6px;
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--accent-color);
+}
+
+input:focus + label {
+  color: var(--accent-color);
+}
+
+input:focus + label,
+input.is-valid + label {
+  transform: translateY(-100%) scale(0.75);
+}
+
+input[type=submit] {
+  transition: .25s;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 16px;
+  background-color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 14px;
+}
+
+input[type=submit]:disabled {
+  color: #808080;
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+input[type=submit]:not(:disabled):hover {
+  border-color: transparent;
+  background-color: var(--accent-color-opaque);
+  color: var(--accent-color);
+}
+
+.submit-container {
+  border-radius: 4px;
+  margin-top: 1rem;
+  height: 56px;
+}
+
+.show-password {
+  transition: opacity .25s;
+  position: absolute;
+  background-color: transparent;
+  right: 0;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  border: none;
+  font-size: 10px;
+  color: grey;
+  cursor: pointer;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.show-password:hover,
+.show-password:focus {
+  color: black;
+}
+
+.input-container:not(:hover, :focus-within) .show-password {
+  opacity: 0;
+}
+
+.password-requirements {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding: 0 16px;
+}
+
+.requirement {
+  font-size: 14px;
+  flex: 1 0 50%;
+  min-width: max-content;
+  margin: 5px 0;
+}
+
+.requirement:before {
+  content: '\2639';
+  padding-right: 5px;
+  font-size: 1.6em;
+  position: relative;
+  top: .15em;
+}
+
+.requirement:not(.valid) {
+  color: #808080;
+}
+
+.requirement.valid {
+  color: #4CAF50;
+}
+
+.requirement.valid:before {
+  content: '\263A';
+}
+
+.requirement.error {
+  color: red;
+}
+
+.hidden {
+  display: none;
+}
+
+  </style>
+
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <h1 class="text-center">Registra</h1>
+    <div class="">
+    <form id="form" action="/auth/register" method="POST">
+      <div class="input-container">
+        <input type="text" id="username" name="username" class="form-control" required>
+        <label for="username">Username</label>
+      </div>
+      <div class="input-container">
+        <input type="email" class="form-control" id="email" name="email" required>
+        <label for="email">Email</label>
+      </div>
+      <div class="input-container">
+        <input name="password" id="password" aria-describedby="requirements" required type="password"/>
+        <label for="password">Password</label>
+        <button class="show-password" id="show-password" type="button" role="switch" aria-label="Show password" aria-checked="false">Show</button>
+      </div>
+  
+      <div id="requirements" class="password-requirements">
+        <p class="requirement" id="length">Min. 8 caratteri</p>
+        <p class="requirement" id="lowercase">Includi lettere minuscole</p>
+        <p class="requirement" id="uppercase">Includi lettere maiuscole</p>
+        <p class="requirement" id="number">Includi numeri</p>
+        <p class="requirement" id="characters">Includi un carattere speciale: #.-?!@$%^&*</p>
+      </div>
+  
+      <div class="input-container">
+        <input type="password" id="confirm-password" required />
+        <label for="confirm-password">Conferma password</label>
+      </div>
+  
+      <div class="password-requirements">
+        <p class="requirement hidden error" id="match">Passwords deve combaciare</p>
+      </div>
+  
+      <div class="submit-container">
+        <input type="submit" id="submit" disabled />
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+<script src="/js/passCheck.js"></script>

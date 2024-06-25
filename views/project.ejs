@@ -1,0 +1,43 @@
+<%- include('layout', { title: 'Progetto', project: project, body: `` }); -%>
+  <div class="container">
+    <h2>Progetto: <%= project.name %></h2>
+    <p><%= project.description %></p>
+
+    <h3>Membris</h3>
+    <ul class="list-group">
+      <% project.members.forEach(member => { %>
+        <li class="list-group-item"><%= member.username %> (<%= member.email %>)</li>
+      <% }); %>
+    </ul>
+
+    <h3>Aggiungi Membro</h3>
+    <form action="/projects/<%= project._id %>/add-member" method="post">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Aggiungi Membro</button>
+    </form>
+
+    <h3>Carica Documento (max 30 MB, solo JPEG - PNG - PDF)</h3>
+    <form action="/projects/<%= project._id %>/upload-document" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="document">Documento</label>
+        <input type="file" class="form-control" id="document" name="document" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Carica Documento</button>
+    </form>
+
+    <h3>Documenti</h3>
+    <ul class="list-group">
+      <% project.documents.forEach(doc => { %>
+        <li class="list-group-item">
+          <a href="<%= '/uploads/' + doc.filename %>"><%= doc.filename %></a>
+        </li>
+      <% }); %>
+    </ul>
+
+    <h3>Crea report PDF</h3>
+    <form action="/projects/<%= project._id %>/generate-pdf" method="post">
+      <button type="submit" class="btn btn-primary">Genera PDF</button>
+    </form>

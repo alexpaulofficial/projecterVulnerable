@@ -1,0 +1,17 @@
+<%- include('layout', { title: 'Profilo', user: user, body: `` }); -%>
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <h1 class="text-center">Profilo</h1>
+    <p class="text-center">Benvenut* <%= user.username %> </p>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">I tuoi dettagli</h5>
+        <p class="card-text"></p>
+        <p><strong>Ruolo:</strong> <%= user.role %></p>
+        <p>Email: <%= user.email %></p>
+        <a href="/auth/logout" class="btn btn-danger">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
