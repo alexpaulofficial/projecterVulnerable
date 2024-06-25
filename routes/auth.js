@@ -6,13 +6,14 @@ const bcrypt = require('bcrypt');
 const xss = require('xss');
 
 const authMiddleware = require('../middleware/authMiddleware');
+
+// CHIAVE SEGRETA PER LA FIRMA DEL TOKEN DA HACKARE
 const weakSecret = '12345';
 
 
 router.get('/login', authMiddleware, (req, res) => {
   if (req.cookies.token) {
     res.cookie('token', req.cookies.token, { httpOnly: true });
-    //return res.redirect('/profile');
     res.redirect('/profile');
   }
   else {
@@ -47,8 +48,7 @@ router.post('/register', async (req, res) => {
   try {
     const existingUser = await User.findOne({ sanitizedUsername });
     if (existingUser) {
-      req.session.errorMessage = 'User already exists';
-      return res.redirect('/auth/register');
+      return res.status(400).send('User already exists');
     }
     // Sanificazione dei dati con XSS
     const hashedPassword = bcrypt.hashSync(password, 10);
@@ -61,8 +61,7 @@ router.post('/register', async (req, res) => {
     res.redirect('/profile');
   } catch (err) {
     console.error('Error registering user:', err);
-    req.session.errorMessage = 'An error occurred while registering the user';
-    res.redirect('/auth/register');
+    return res.status(500).send('Error registering user:', err);
   }
 });
 

@@ -9,16 +9,18 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const authMiddleware = require('./middleware/authMiddleware');
+// Configurazione delle variabili d'ambiente
+require('dotenv').config();
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/projecter', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  // DA SETTARE IN PRODUZIONE
-  //user: 'myappuser',
-  //pass: 'myapppassword'
-}).then(() => console.log('Connected to MongoDB')).catch(err => console.log('Failed to connect to MongoDB', err));
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbName = process.env.DB_NAME;
+
+const connectionString = `mongodb://${dbHost}:${dbPort}/${dbName}`;
+
+mongoose.connect(connectionString).then(() => console.log('Connected to MongoDB')).catch(err => console.log('Failed to connect to MongoDB', err));
 
 app.use(helmet());
 // Limita il numero di richieste per un determinato periodo di tempo
@@ -40,14 +42,12 @@ const SessionCookie =  {
   secure: true,
   httpOnly: true,
   sameSite: "lax",
-  maxAge: 1000 * 60 * 60 * 60 * 24 * 2 //2 day
+  maxAge: 1000 * 60 * 60 * 60 * 24 * 2 // 2 giorni
 } 
 app.use(session({
   genid:function(req){
     if ( (req.session) && (req.session.uid) ) {
       return req.session.uid + "_" + 123;
-      //    return new Date().getTime().toString();
-
     } else {
       return new Date().getTime().toString();
     }
@@ -70,13 +70,6 @@ app.disable('x-powered-by');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Middleware per gestire gli errori
-app.use((req, res, next) => {
-  res.locals.errorMessage = req.session.errorMessage;
-  delete req.session.errorMessage;
-  next();
-});
 
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);

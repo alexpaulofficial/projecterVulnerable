@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
-const weakSecret = '12345';
 
+// CHIAVE SEGRETA PER LA FIRMA DEL TOKEN DA HACKARE
+const weakSecret = '12345';
 
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.token;
     // Check if token exists
     if (!token) {
         req.user = null;
-        //return res.status(401).json({ message: 'No token provided' });
         next();
     }
     else {

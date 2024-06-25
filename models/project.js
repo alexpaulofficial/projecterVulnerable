@@ -19,12 +19,6 @@ const projectSchema = new mongoose.Schema({
     {
       filename: String
     }
-  ],
-  images: [
-    {
-      filename: String,
-      path: String
-    }
   ]
 });
 

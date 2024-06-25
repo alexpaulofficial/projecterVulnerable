@@ -15,13 +15,12 @@ router.use(fileUpload());
 function isAdmin(req, res, next) {
   authMiddleware(req, res, () => {});
   if (!req.user) {
-    return res.status(401).send('Unauthorized');
+    return res.status(401).send('Non autorizzato');
   }
   if (req.user.role === 'admin') {
-    console.log('User: ', req.user);
     next();
   } else {
-    res.status(403).send('Forbidden');
+    res.status(403).send('Vietato');
   }
 }
 
@@ -36,20 +35,20 @@ router.get('/:id', isAdmin, async (req, res) => {
   try {
     // Validazione dell'input: verifica che l'ID sia un ObjectId valido
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).send('ID del progetto non valido.');
+      return res.status(400).send('ID del progetto non valido');
     }
 
     const project = await Project.findById(req.params.id).populate('members');
 
     // Controllo dell'accesso: verifica se l'utente ha il diritto di visualizzare il progetto
     if (!project) {
-      return res.status(404).send('Progetto non trovato.');
+      return res.status(404).send('Progetto non trovato');
     }
     res.render('project', { user: req.user, project });
   } catch (error) {
     // Gestione degli errori: log dell'errore e risposta all'utente
     console.error('Errore durante il recupero del progetto:', error);
-    res.status(500).send('Errore interno del server.');
+    res.status(500).send('Errore interno del server');
   }
 });
 
@@ -57,8 +56,7 @@ router.get('/:id', isAdmin, async (req, res) => {
 router.post('/create', isAdmin, async (req, res) => {
   const { name, description } = req.body;
   if (!name || !description) {
-    req.session.errorMessage = 'Name and description are required';
-    return res.redirect('/projects');
+    return res.status(400).send('Nome e descrizione del progetto richiesti');
   }
   const project = new Project({ name, description });
   await project.save();
@@ -71,11 +69,11 @@ router.post('/:id/add-member', isAdmin, async (req, res) => {
   const user = await User.findOne({ username });
   if (user) {
     await Project.findByIdAndUpdate(req.params.id, { $push: { members: user._id } });
+    res.redirect(`/projects/${req.params.id}`);
   }
   else {
-    req.session.errorMessage = "User not found"
+    res.status(404).send('User not found');
   }
-  res.redirect(`/projects/${req.params.id}`);
 });
 
 // Carica un documento al progetto
@@ -125,7 +123,7 @@ router.post('/:id/generate-pdf', isAdmin, async (req, res) => {
   const project = await Project.findById(req.params.id).populate('members').populate('documents');
 
   if (!project) {
-    return res.status(404).send('Project not found');
+    return res.status(404).send('Pogetto non trovato.');
   }
 
  const htmlTemplate = `
@@ -186,18 +184,12 @@ router.post('/:id/generate-pdf', isAdmin, async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: ['--no-sandbox', '--allow-file-access-from-files', '--disable-web-security',
         '--disable-features=IsolateOrigins',
         '--disable-site-isolation-trials']
     });
-    console.log('Browser launched');
-    
     const page = await browser.newPage();
-    console.log('Page opened');
-
-    //await page.setContent(htmlTemplate);
-    //await page.emulateMediaType('screen');
 
     // save htmlTemplate to a file
     fs.writeFileSync('temp.html', htmlTemplate);
@@ -219,7 +211,7 @@ router.post('/:id/generate-pdf', isAdmin, async (req, res) => {
   }
 });
 
-// make the "upload" folder accessible for admin users
+// Rende la cartella degli uploads accessibile solo agli admin
 router.use('/uploads', isAdmin, express.static('uploads'));
 
 module.exports = router;
