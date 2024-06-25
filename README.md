@@ -71,37 +71,42 @@ Questa piattaforma è stata progettata per gestire progetti di team, fornendo fu
    - Descrizione: Effettua il logout dell'utente.
    - Autenticazione: Richiesta.
 
-2. **GET /projects**
+2. **GET /profile**
+   
+   - Descrizione: Visualizza le info di profilo dell'utente.
+   - Autenticazione: Richiesta.
+
+3. **GET /projects**
    
    - Descrizione: Visualizza tutti i progetti.
-   - Autenticazione: Richiesta.
+   - Autenticazione: Richiesta con ruolo <b>admin</b>.
 
-3. **GET /projects/**
+4. **GET /projects/**
    
    - Descrizione: Visualizza i dettagli di un singolo progetto.
-   - Autenticazione: Richiesta.
+   - Autenticazione: Richiesta con ruolo <b>admin</b>.
 
-4. **POST /projects/create**
+5. **POST /projects/create**
    
    - Descrizione: Crea un nuovo progetto.
-   - Autenticazione: Richiesta.
+   - Autenticazione: Richiesta con ruolo <b>admin</b>.
 
-5. **POST /projects/**
+6. **POST /projects/**
    
    **/add-member**
    
    - Descrizione: Aggiunge un membro a un progetto esistente.
-   - Autenticazione: Richiesta.
+   - Autenticazione: Richiesta con ruolo <b>admin</b>.
    
    **/upload-document**
    
    - Descrizione: Carica un file come documento del progetto, <u>dimensione massima 30 MB, formato JPEG/PNG/PDF</u>.
-   - Autenticazione: Richiesta.
+   - Autenticazione: Richiesta con ruolo <b>admin</b>.
 
    **/generate-pdf**
    
    - Descrizione: Genera un PDF con le informazioni del progetto.
-   - Autenticazione: Richiesta.
+   - Autenticazione: Richiesta con ruolo <b>admin</b>.
 
 ## ❗VULNERABILITA'❗
 
@@ -117,19 +122,29 @@ La <b>generazione del PDF</b> include contenuti HTML che possono includere ifram
 
 ### 2. Cross-Site Scripting (XSS)
 
-La piattaforma permette di inserire contenuti HTML nei progetti senza una valida sanificazione, permettendo così l'inserimento di script maligni.
+La piattaforma permette di inserire contenuti HTML nei progetti senza una valida sanificazione, permettendo così l'inserimento di script maligni. Gli script verranno eseguiti nella creazione del PDF. Questo perchè la libreria <i>puppeteer</i> genera il PDF da una pagina web aperta in modo invisibile in background, eseguendo quindi eventuali script inseriti malevolmente.
 
 **Esempio di Payload Maligno:**
 
 ```html
-<script>alert('XSS');</script>
+<script>...</script>
 ```
 
 ### 3. Utilizzo di JWT con chiavi segrete deboli
 
 Il sistema di autenticazione utilizza JSON Web Tokens (JWT) con una chiave segreta debole, rendendo possibile per un attaccante effettuare un brute-force sulla chiave segreta.
 
-### 4. Da trovare...
+### 4. Accesso a File con Path Traversal
+Quando l'applicazione permette di accedere ai file di sistema tramite input controllato dall'utente, come un iframe che carica file specificati da un campo di input, questa è una chiara violazione di sicurezza che può essere sfruttata con tecniche di path traversal.
+
+**Esempio di Payload Maligno:**
+```html
+<iframe src="file:/../../../../etc/passwd"></iframe>
+```
+
+In questo esempio, l'attaccante manipola il parametro file per accedere a /etc/passwd, un file che non dovrebbe essere accessibile tramite l'applicazione web.
+
+### 5. Da trovare...
 
 La No-SQL injection dovrebbe essere mitigata dall'apposita libreria, gli input (tranne il campo Descrizione nella creazione del proegetto che è stato volutamente lasciato non sanificato) sono tutti sanificati. Anche il caricamento del file è stato implementato con i controlli del caso per evitare vulnerabilità. Il sito quindi dovrebbe essere sicuro tranne per i casi esposti in precedenza, tuttavia non sono da escludere vulnerabilità non note 🙂
 
