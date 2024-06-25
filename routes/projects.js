@@ -7,6 +7,9 @@ const path = require('path');
 const fileUpload = require('express-fileupload');
 const User = require('../models/user');
 
+// LA VULNERABILITA' XSS E' PRESENTE NELLA VISUALIZZAZIONE DEI PROGETTI E NELLA CREAZIONE DI UN NUOVO PROGETTO
+// QUESTO PERCHE' I DATI VENGONO INSERITI DIRETTAMENTE NEL TEMPLATE SENZA ESSERE SANIFICATI
+
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.use(fileUpload());

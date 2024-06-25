@@ -7,7 +7,6 @@ const session = require('express-session');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
 const authMiddleware = require('./middleware/authMiddleware');
 // Configurazione delle variabili d'ambiente
 require('dotenv').config();
@@ -33,7 +32,6 @@ app.use(
   }),
 );
 // Pulisce i dati da eventuali attacchi XSS
-app.use(xss());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
