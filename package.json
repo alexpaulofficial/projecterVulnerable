@@ -1,0 +1,39 @@
+{
+  "name": "projecterVulnerable",
+  "version": "1.0.0",
+  "description": "Vulnerable Express.JS website for Ethical Hacking",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexpaulofficial/projecterVulnerable.git"
+  },
+  "keywords": [
+    "epxress",
+    "ethicalhacking",
+    "ctf"
+  ],
+  "author": "Alessio Paolucci",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/alexpaulofficial/projecterVulnerable/issues"
+  },
+  "homepage": "https://github.com/alexpaulofficial/projecterVulnerable#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "epxress": "^0.0.1-security",
+    "express-fileupload": "^1.5.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.3.1",
+    "express-session": "^1.18.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.4",
+    "puppeteer": "^22.12.1",
+    "xss": "^1.0.15"
+  }
+}
