@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
         // Call the next middleware or route handler
         next();
     } catch (error) {
-        return res.status(401).json({ message: 'Token non valido' });
+        return res.redirect('/auth/logout');
     }
 }
 };
