@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
   if (user) {
   const isMatch = await bcrypt.compare('' + password, user.password);
   if (!isMatch) {
-    return res.status(400).send('Crednziali non valide');
+    return res.status(400).send('Credenziali non valide');
   }
   } else {
     return res.status(400).send('Credenziali non valide');

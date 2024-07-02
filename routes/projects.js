@@ -18,9 +18,9 @@ router.use(fileUpload());
 function isAdmin(req, res, next) {
   authMiddleware(req, res, () => {});
   if (!req.user) {
-    return res.status(401).send('Non autorizzato');
+    res.status(401).send('Non autorizzato');
   }
-  if (req.user.role === 'admin') {
+  else if (req.user.role === 'admin') {
     next();
   } else {
     res.status(403).send('Vietato');

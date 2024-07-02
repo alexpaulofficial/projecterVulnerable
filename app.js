@@ -9,6 +9,8 @@ const authMiddleware = require('./middleware/authMiddleware');
 const cookieParser = require('cookie-parser');
 // Configurazione delle variabili d'ambiente
 require('dotenv').config();
+const https = require("https");
+const fs = require("fs");
 
 const app = express();
 
@@ -61,5 +63,13 @@ app.get('/profile', authMiddleware, (req, res) => {
   res.render('profile', { user: req.user });
 });
 
-const port = 3000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// Creazione del server HTTPS
+https
+  .createServer({
+    key: fs.readFileSync(path.join(__dirname, "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
+  },
+  app)
+  .listen(3000, ()=>{
+    console.log('server is runing at port 3000')
+  });

@@ -183,11 +183,18 @@ La No-SQL injection dovrebbe essere mitigata dall'apposita libreria, gli input (
    DB_PORT=27017
    DB_NAME=projecter
    ```
+5. Crea un certificato per HTTPS nella root di progetto tramite OpenSSL (i browser ormai forzano l'utilizzo di tale protocollo)
 
-5. Avvia l'applicazione:
+   ```sh
+   openssl genrsa -out key.pem
+   openssl req -new -key key.pem -out csr.pem
+   openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+   ```
+
+6. Avvia l'applicazione:
    
    ```sh
-   npm start
+   node app.js
    ```
 
 6. Apri il browser e vai a `http://localhost:3000`.

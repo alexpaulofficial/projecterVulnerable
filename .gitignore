@@ -131,3 +131,6 @@ dist
 
 # Personal files uploaded to the server
 uploads/
+
+# HTTPS certificates
+*.pem
