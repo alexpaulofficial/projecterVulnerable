@@ -46,9 +46,6 @@ router.post('/register', async (req, res) => {
   const sanitizedEmail = xss(email);
   try {
     const existingUser = await User.findOne({ sanitizedUsername });
-    if (existingUser) {
-      return res.status(400).send('Utenza già esistente');
-    }
     // Sanificazione dei dati con XSS
     const hashedPassword = bcrypt.hashSync(password, 10);
     // Creazione di un nuovo utente
@@ -59,8 +56,8 @@ router.post('/register', async (req, res) => {
     res.cookie('token', token, { httpOnly: true });
     res.redirect('/profile');
   } catch (err) {
-    console.error('Errore di registrazione:', err);
-    return res.status(500).send('Errore di registrazione:', err);
+    console.error('Errore di registrazione', err);
+    return res.status(500).send('Errore di registrazione (forse l\'utente esiste già)');
   }
 });
 
