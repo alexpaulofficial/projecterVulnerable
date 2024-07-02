@@ -45,7 +45,6 @@ router.post('/register', async (req, res) => {
   const sanitizedUsername = xss(username);
   const sanitizedEmail = xss(email);
   try {
-    const existingUser = await User.findOne({ sanitizedUsername });
     // Sanificazione dei dati con XSS
     const hashedPassword = bcrypt.hashSync(password, 10);
     // Creazione di un nuovo utente
@@ -57,7 +56,7 @@ router.post('/register', async (req, res) => {
     res.redirect('/profile');
   } catch (err) {
     console.error('Errore di registrazione', err);
-    return res.status(500).send('Errore di registrazione (forse l\'utente esiste già)');
+    return res.status(500).send('Errore di registrazione (forse l\'utente o l\'email esistono già)');
   }
 });
 
