@@ -1,13 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 // Helmet serve per proteggere l'applicazione da alcune vulnerabilità
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const authMiddleware = require('./middleware/authMiddleware');
+const cookieParser = require('cookie-parser');
 // Configurazione delle variabili d'ambiente
 require('dotenv').config();
 
@@ -35,32 +34,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Configurazione del cookie di sessione
-const SessionCookie =  {
-  secure: true,
-  httpOnly: true,
-  sameSite: "lax",
-  maxAge: 1000 * 60 * 60 * 60 * 24 * 2 // 2 giorni
-} 
-app.use(session({
-  genid:function(req){
-    if ( (req.session) && (req.session.uid) ) {
-      return req.session.uid + "_" + 123;
-    } else {
-      return new Date().getTime().toString();
-    }
-  },
-  resave: false, //forces the session to be saved back to store
-  httpOnly: true,
-  name:'sessionID',
-  secret: 'projectm@n@gement@pp',
-  secure: true,
-  saveUninitialized: true,
-  cookie: SessionCookie
-}))
-// In questo modo il cookie è siuro evitando attacchi CSRF
-app.use(cookieParser());
-
 // Serve per far capire che è scritto in Express
 app.disable('x-powered-by');
 
@@ -68,6 +41,8 @@ app.disable('x-powered-by');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cookieParser());
 
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);

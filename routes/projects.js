@@ -6,7 +6,6 @@ const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const User = require('../models/user');
-var sanitize = require("sanitize-filename");
 
 // LA VULNERABILITA' XSS E' PRESENTE NELLA VISUALIZZAZIONE DEI PROGETTI E NELLA CREAZIONE DI UN NUOVO PROGETTO
 // QUESTO PERCHE' I DATI VENGONO INSERITI DIRETTAMENTE NEL TEMPLATE SENZA ESSERE SANIFICATI
@@ -112,7 +111,7 @@ router.post('/:id/upload-document', isAdmin, async (req, res) => {
   }
 
   // Ulteriore pulizia del nome del file e definizione del percorso di upload
-  const uploadPath = sanitize(path.join(__dirname, '../uploads/', cleanName));
+  const uploadPath = path.join(__dirname, '../uploads/', cleanName);
 
   file.mv(uploadPath, async (err) => {
     if (err) return res.status(500).send(err);
