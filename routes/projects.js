@@ -113,6 +113,11 @@ router.post('/:id/upload-document', isAdmin, async (req, res) => {
   // Ulteriore pulizia del nome del file e definizione del percorso di upload
   const uploadPath = path.join(__dirname, '../uploads/', cleanName);
 
+  // Se la cartella di upload non esiste, creala
+  if (!fs.existsSync(path.join(__dirname, '../uploads/'))) {
+    fs.mkdirSync(path.join(__dirname, '../uploads/'));
+  }
+
   file.mv(uploadPath, async (err) => {
     if (err) return res.status(500).send(err);
 

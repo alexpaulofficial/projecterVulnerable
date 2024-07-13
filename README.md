@@ -183,7 +183,7 @@ La No-SQL injection dovrebbe essere mitigata dall'apposita libreria, gli input (
    DB_PORT=27017
    DB_NAME=projecter
    ```
-5. Crea un certificato per HTTPS nella root di progetto tramite OpenSSL (i browser ormai forzano l'utilizzo di tale protocollo)
+5. Per collegarsi da un host esternamente è consigliato creare un certificato HTTPS tramite OpenSSL, dato che i browser ormai forzano l'utilizzo di tale protocollo. Nel caso di creazione di una macchina virtuale è meglio configurare Nginx. Il progetto così com'è scritto non supporta di default HTTPS, vanno decommentate alcune righe su app.js.
 
    ```sh
    openssl genrsa -out key.pem
